@@ -2,11 +2,12 @@ package authentication
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"log"
+	"jwt-authentication/model"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	
 )
 
@@ -25,13 +26,21 @@ func UserAddController(c *gin.Context) {
 
 }
 
-func userAdd(c *gin.Context, userData user) {
+func userAdd(c *gin.Context, userData User) {
 	    if IsUserExist(userData) {
 			c.JSON(400, gin.H{
 				"message": "User Exist with" + userData.Email,
 		})
 		} else {
-			_, err := UserCollection.InsertOne(context.TODO(), userData)
+			// Hashing the password with the default cost of 10
+			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
+			userSignupData := model.UserModel{}
+			userSignupData.Email = userData.Email
+			userSignupData.Password = hashedPassword
+			if err != nil {
+				log.Fatal(err)
+			}
+			_, err = UserCollection.InsertOne(context.TODO(), userSignupData)
 			if err != nil {
 				log.Fatal(err)
 			}

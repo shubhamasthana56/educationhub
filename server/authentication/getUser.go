@@ -1,6 +1,5 @@
 package authentication
 import( "context"
-		"fmt"
 		"log"
 
 		"go.mongodb.org/mongo-driver/bson"
@@ -14,7 +13,7 @@ if err != nil {
 	log.Fatal(err)
 }
 for cur.Next(context.TODO()) {
-	var result user
+	var result User
 	err = cur.Decode(&result)
 	if err != nil {
 		log.Fatal(err)
