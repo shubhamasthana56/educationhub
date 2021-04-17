@@ -1,17 +1,18 @@
 package db
-import( 
-		"context"
-		"fmt"
-		"time"
-		"log"
 
-		"go.mongodb.org/mongo-driver/mongo"
-		"go.mongodb.org/mongo-driver/mongo/options"
-		"go.mongodb.org/mongo-driver/mongo/readpref"
-	)
+import (
+	"context"
+	"fmt"
+	"log"
+	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
+)
 
 func ConnectDB() *mongo.Client {
-	client,err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}

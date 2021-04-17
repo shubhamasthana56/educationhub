@@ -1,6 +1,6 @@
 package model
 
 type UserModel struct {
-	Email string
+	Email    string
 	Password []byte
 }

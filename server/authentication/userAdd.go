@@ -2,13 +2,12 @@ package authentication
 
 import (
 	"context"
-	"strings"
-	"log"
 	"jwt-authentication/model"
+	"log"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	
 )
 
 func UserAddController(c *gin.Context) {
@@ -22,31 +21,30 @@ func UserAddController(c *gin.Context) {
 	} else {
 		userAdd(c, user)
 	}
-	
 
 }
 
 func userAdd(c *gin.Context, userData User) {
-	    if IsUserExist(userData) {
-			c.JSON(400, gin.H{
-				"message": "User Exist with" + userData.Email,
+	if IsUserExist(userData) {
+		c.JSON(400, gin.H{
+			"message": "User Exist with" + userData.Email,
 		})
-		} else {
-			// Hashing the password with the default cost of 10
-			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
-			userSignupData := model.UserModel{}
-			userSignupData.Email = userData.Email
-			userSignupData.Password = hashedPassword
-			if err != nil {
-				log.Fatal(err)
-			}
-			_, err = UserCollection.InsertOne(context.TODO(), userSignupData)
-			if err != nil {
-				log.Fatal(err)
-			}
-			c.JSON(200, gin.H{
-				"message": "User added successfully",
-			})
+	} else {
+		// Hashing the password with the default cost of 10
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
+		userSignupData := model.UserModel{}
+		userSignupData.Email = userData.Email
+		userSignupData.Password = hashedPassword
+		if err != nil {
+			log.Fatal(err)
 		}
-		
+		_, err = UserCollection.InsertOne(context.TODO(), userSignupData)
+		if err != nil {
+			log.Fatal(err)
+		}
+		c.JSON(200, gin.H{
+			"message": "User added successfully",
+		})
+	}
+
 }
