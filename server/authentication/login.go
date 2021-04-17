@@ -14,8 +14,8 @@ import (
 )
 
 type LoginResponse struct {
-	User          bool `json: "user"`
-	Authenticated bool `json: "authenticated"`
+	user          bool
+	authenticated bool
 }
 
 func LoginController(c *gin.Context) {
@@ -37,18 +37,19 @@ func LoginController(c *gin.Context) {
 	}
 	loginResponse = verifyUserHash(userResponse, userParam)
 	fmt.Println(loginResponse)
+	c.JSON(200, verifyUserHash(userResponse, userParam))
 
 }
 
 func verifyUserHash(response model.UserModel, user User) LoginResponse {
 	if len(strings.TrimSpace(response.Email)) == 0 {
-		return LoginResponse{User: false, Authenticated: false}
+		return LoginResponse{user: false, authenticated: false}
 	} else {
 		// Comparing the password with the hash
 		err := bcrypt.CompareHashAndPassword(response.Password, []byte(user.Password))
 		if err == nil {
-			return LoginResponse{User: true, Authenticated: true}
+			return LoginResponse{user: true, authenticated: true}
 		}
 	}
-	return LoginResponse{User: true, Authenticated: false}
+	return LoginResponse{user: true, authenticated: false}
 }
