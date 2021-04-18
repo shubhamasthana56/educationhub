@@ -2,7 +2,6 @@ package authentication
 
 import (
 	"context"
-	"fmt"
 	"jwt-authentication/model"
 	"log"
 	"strings"
@@ -36,9 +35,11 @@ func LoginController(c *gin.Context) {
 		}
 	}
 	loginResponse = verifyUserHash(userResponse, userParam)
-	fmt.Println(loginResponse)
-	c.JSON(200, verifyUserHash(userResponse, userParam))
-
+	if loginResponse.authenticated && loginResponse.user {
+		c.JSON(200, gin.H{
+			"token": GenerateToken(userResponse.Email, true),
+		})
+	}
 }
 
 func verifyUserHash(response model.UserModel, user User) LoginResponse {
