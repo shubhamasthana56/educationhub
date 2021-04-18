@@ -39,11 +39,16 @@ func LoginController(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"token": GenerateToken(userResponse.Email, true),
 		})
+	} else {
+		c.JSON(200, gin.H{
+			"message": "Invalid Email or Password",
+		})
 	}
 }
 
 func verifyUserHash(response model.UserModel, user User) LoginResponse {
 	if len(strings.TrimSpace(response.Email)) == 0 {
+
 		return LoginResponse{user: false, authenticated: false}
 	} else {
 		// Comparing the password with the hash
